@@ -27,7 +27,7 @@ cd streaming-finder
 ### Step 2: Install Dependencies
 ```bash
 # Install Movie of the Night SDK
-npm install @movie-of-the-night/streaming-availability-sdk
+npm install streaming-availability
 
 # Install icon library
 npm install lucide-react
@@ -170,7 +170,7 @@ export interface Service {
 ### Step 3: Create API Client
 Create `src/lib/streaming-api.ts`:
 ```typescript
-import { Client } from '@movie-of-the-night/streaming-availability-sdk';
+import { Client } from 'streaming-availability';
 
 if (!process.env.RAPIDAPI_KEY) {
   throw new Error('RAPIDAPI_KEY environment variable is not set');

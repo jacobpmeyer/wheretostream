@@ -14,7 +14,7 @@ Build a web application that allows users to search for movies and TV shows and 
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **API**: Movie of the Night Streaming Availability API (via RapidAPI)
-- **SDK**: @movie-of-the-night/streaming-availability-sdk
+- **SDK**: streaming-availability
 - **Deployment**: Vercel
 - **Tool Management**: Mise (Node.js 22)
 
@@ -30,7 +30,7 @@ npx create-next-app@latest streaming-finder
 # Options: TypeScript ✓, App Router ✓, Tailwind CSS ✓, src/ directory ✓
 
 # Install dependencies
-npm install @movie-of-the-night/streaming-availability-sdk
+npm install streaming-availability
 npm install -D @types/node
 ```
 

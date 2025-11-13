@@ -5,7 +5,7 @@ This document provides detailed information about integrating the Movie of the N
 
 ## SDK Installation
 ```bash
-npm install @movie-of-the-night/streaming-availability-sdk
+npm install streaming-availability
 ```
 
 ## Authentication
@@ -20,7 +20,7 @@ RAPIDAPI_KEY=your_rapid_api_key_here
 
 ### Base Client (`src/lib/streaming-api.ts`)
 ```typescript
-import { Client } from '@movie-of-the-night/streaming-availability-sdk';
+import { Client } from 'streaming-availability';
 
 // Initialize client with API key
 const client = new Client(process.env.RAPIDAPI_KEY!);
@@ -339,7 +339,7 @@ Example:
 
 ```typescript
 // src/lib/streaming-api.ts
-import { Client } from '@movie-of-the-night/streaming-availability-sdk';
+import { Client } from 'streaming-availability';
 
 if (!process.env.RAPIDAPI_KEY) {
   throw new Error('RAPIDAPI_KEY is not set');

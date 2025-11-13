@@ -1,0 +1,21 @@
+[tools]
+node = "22"
+
+[env]
+NODE_ENV = "development"
+
+[tasks.dev]
+description = "Start development server"
+run = "npm run dev"
+
+[tasks.build]
+description = "Build for production"
+run = "npm run build"
+
+[tasks.lint]
+description = "Run ESLint"
+run = "npm run lint"
+
+[tasks.setup]
+description = "Install dependencies"
+run = "npm install"
