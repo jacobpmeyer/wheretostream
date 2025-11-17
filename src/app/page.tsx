@@ -1,4 +1,5 @@
 import SearchBar from '@/components/SearchBar';
+import { Github } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -44,6 +45,19 @@ export default function Home() {
               Netflix, Disney+, Prime Video, Hulu, and hundreds more
             </p>
           </div>
+        </div>
+
+        {/* GitHub Link */}
+        <div className="flex justify-center mt-12">
+          <a
+            href="https://github.com/jacobpmeyer/wheretostream"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/60 hover:text-white transition-colors"
+            aria-label="View source on GitHub"
+          >
+            <Github className="h-6 w-6" />
+          </a>
         </div>
       </main>
     </div>
