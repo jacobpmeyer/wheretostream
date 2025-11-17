@@ -42,14 +42,14 @@ export default function SearchBar({
   return (
     <form onSubmit={handleSubmit} className="relative w-full max-w-2xl">
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-600" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
           autoFocus={autoFocus}
-          className="w-full pl-12 pr-12 py-4 text-lg text-black placeholder:text-gray-600 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none transition-colors"
+          className="w-full pl-12 pr-12 py-4 text-lg text-white placeholder:text-gray-400 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none transition-colors"
         />
         {query && (
           <button
