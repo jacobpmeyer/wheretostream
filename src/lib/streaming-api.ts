@@ -4,14 +4,9 @@ if (!process.env.RAPIDAPI_KEY) {
   throw new Error('RAPIDAPI_KEY environment variable is not set');
 }
 
-console.log('Initializing Streaming API client...');
-console.log('API Key present:', !!process.env.RAPIDAPI_KEY);
-console.log('API Key full value:', process.env.RAPIDAPI_KEY);
-console.log('All env keys:', Object.keys(process.env).filter(k => k.includes('RAPID')));
-
 const client = new Client(
   new Configuration({
-    apiKey: 'd9afdc7e5dmshe99497b54208206p1809f6jsn28f1b19dd223'
+    apiKey: process.env.RAPIDAPI_KEY
   })
 );
 
