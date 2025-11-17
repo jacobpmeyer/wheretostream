@@ -13,9 +13,9 @@ export default function ShowDetails({ show }: ShowDetailsProps) {
   return (
     <div>
       {/* Header with Poster and Title Info */}
-      <div className="flex gap-6 mb-8">
+      <div className="flex flex-col md:flex-row gap-6 mb-8">
         {/* Poster */}
-        <div className="relative aspect-[2/3] rounded-lg overflow-hidden shadow-lg bg-gray-200 w-[240px] flex-shrink-0">
+        <div className="relative aspect-[2/3] rounded-lg overflow-hidden shadow-lg bg-gray-200 w-full max-w-[200px] md:w-[240px] mx-auto md:mx-0 flex-shrink-0">
           {posterUrl ? (
             <Image
               src={posterUrl}
@@ -38,7 +38,7 @@ export default function ShowDetails({ show }: ShowDetailsProps) {
         {/* Title Info and Details */}
         <div className="flex-1">
           <div className="mb-4">
-            <h1 className="text-4xl font-bold mb-2 text-black">{show.title}</h1>
+            <h1 className="text-2xl md:text-4xl font-bold mb-2 text-black">{show.title}</h1>
             <div className="flex flex-wrap items-center gap-4 text-gray-700">
               {show.firstAirYear && (
                 <span className="flex items-center gap-1">
