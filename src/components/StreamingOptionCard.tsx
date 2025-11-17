@@ -39,6 +39,9 @@ function formatSubtitles(subtitles?: Array<{ language: string; region?: string; 
 export default function StreamingOptionCard({ option }: StreamingOptionCardProps) {
   const [showDetails, setShowDetails] = useState(false);
 
+  // Log subtitle data for debugging
+  console.log('Subtitles for', option.service.name, ':', option.subtitles);
+
   // Check for English and Japanese subtitles
   const hasEnglishSubs = option.subtitles?.some(sub =>
     sub.language?.toLowerCase() === 'en' || sub.language?.toLowerCase() === 'eng'
