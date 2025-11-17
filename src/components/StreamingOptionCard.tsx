@@ -39,16 +39,15 @@ function formatSubtitles(subtitles?: Array<{ language: string; region?: string; 
 export default function StreamingOptionCard({ option }: StreamingOptionCardProps) {
   const [showDetails, setShowDetails] = useState(false);
 
-  // Log subtitle data for debugging
-  console.log('Subtitles for', option.service.name, ':', option.subtitles);
-
   // Check for English and Japanese subtitles
-  const hasEnglishSubs = option.subtitles?.some(sub =>
-    sub.language?.toLowerCase() === 'en' || sub.language?.toLowerCase() === 'eng'
-  );
-  const hasJapaneseSubs = option.subtitles?.some(sub =>
-    sub.language?.toLowerCase() === 'ja' || sub.language?.toLowerCase() === 'jpn'
-  );
+  const hasEnglishSubs = option.subtitles?.some(sub => {
+    const lang = (sub as any).locale?.language?.toLowerCase() || sub.language?.toLowerCase();
+    return lang === 'en' || lang === 'eng';
+  });
+  const hasJapaneseSubs = option.subtitles?.some(sub => {
+    const lang = (sub as any).locale?.language?.toLowerCase() || sub.language?.toLowerCase();
+    return lang === 'ja' || lang === 'jpn';
+  });
 
   return (
     <div className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 transition-colors">

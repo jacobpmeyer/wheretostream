@@ -16,7 +16,7 @@ export default function Home() {
 
         {/* Search Bar */}
         <div className="flex justify-center mb-16">
-          <SearchBar autoFocus />
+          <SearchBar autoFocus variant="light" />
         </div>
 
         {/* Features */}

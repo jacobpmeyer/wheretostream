@@ -1,6 +1,9 @@
 [tools]
 node = "22"
 
+[env]
+RAPIDAPI_KEY = "9573a86207msh151ca3a5e11013ep14fab5jsncdce7ee6ff9b"
+
 [tasks.dev]
 description = "Start development server"
 run = "npm run dev"

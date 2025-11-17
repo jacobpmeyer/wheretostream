@@ -10,13 +10,15 @@ interface SearchBarProps {
   onSearch?: (query: string) => void;
   placeholder?: string;
   autoFocus?: boolean;
+  variant?: 'light' | 'dark'; // light = white text, dark = black text
 }
 
 export default function SearchBar({
   defaultValue = '',
   placeholder = 'Search for movies and TV shows...',
   autoFocus = false,
-  onSearch
+  onSearch,
+  variant = 'dark'
 }: SearchBarProps) {
   const [query, setQuery] = useState(defaultValue);
   const debouncedQuery = useDebounce(query, 300);
@@ -49,7 +51,11 @@ export default function SearchBar({
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
           autoFocus={autoFocus}
-          className="w-full pl-12 pr-12 py-4 text-lg text-white placeholder:text-gray-400 rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none transition-colors"
+          className={`w-full pl-12 pr-12 py-4 text-lg rounded-full border-2 border-gray-300 focus:border-blue-500 focus:outline-none transition-colors ${
+            variant === 'light'
+              ? 'text-white placeholder:text-gray-400'
+              : 'text-black placeholder:text-gray-500'
+          }`}
         />
         {query && (
           <button
