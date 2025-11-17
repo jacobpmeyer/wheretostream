@@ -170,13 +170,17 @@ export interface Service {
 ### Step 3: Create API Client
 Create `src/lib/streaming-api.ts`:
 ```typescript
-import { Client } from 'streaming-availability';
+import { Client, Configuration } from 'streaming-availability';
 
 if (!process.env.RAPIDAPI_KEY) {
   throw new Error('RAPIDAPI_KEY environment variable is not set');
 }
 
-const client = new Client(process.env.RAPIDAPI_KEY);
+const client = new Client(
+  new Configuration({
+    apiKey: process.env.RAPIDAPI_KEY
+  })
+);
 
 export async function searchShows(title: string, country: string = 'us') {
   try {
@@ -245,27 +249,95 @@ export const COUNTRIES = [
 ```
 
 ### Step 6: Test API Connection
+Install tsx for running TypeScript:
+```bash
+npm install -D tsx
+```
+
 Create `scripts/test-api.ts`:
 ```typescript
-import { searchShows } from '../src/lib/streaming-api';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+// Manually load .env.local (Next.js does this automatically)
+try {
+  const envFile = readFileSync(resolve(process.cwd(), '.env.local'), 'utf8');
+  envFile.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const [key, ...valueParts] = trimmed.split('=');
+      if (key && valueParts.length > 0) {
+        process.env[key.trim()] = valueParts.join('=').trim();
+      }
+    }
+  });
+} catch (error) {
+  console.error('Error loading .env.local:', error);
+}
 
 async function testAPI() {
+  // Dynamic import AFTER env is loaded
+  const { searchShows, getShowById } = await import('../src/lib/streaming-api.js');
+
   console.log('Testing API connection...\n');
-  
+
+  if (!process.env.RAPIDAPI_KEY) {
+    console.error('❌ RAPIDAPI_KEY is not set in .env.local');
+    process.exit(1);
+  }
+
+  console.log('✓ RAPIDAPI_KEY is set\n');
+
   try {
+    // Test search
+    console.log('1. Testing search for "Inception"...');
     const results = await searchShows('Inception', 'us');
-    console.log('✓ API connection successful!');
-    console.log(`Found ${results.length} results`);
-    console.log('First result:', results[0]?.title);
+    console.log(`   ✓ Found ${results.length} results`);
+
+    if (results.length > 0) {
+      console.log(`   ✓ First result: ${results[0].title}`);
+
+      // Test get show by ID
+      console.log('\n2. Testing get show details...');
+      const show = await getShowById(results[0].id, 'us');
+      console.log(`   ✓ Fetched details for: ${show.title}`);
+      console.log(`   ✓ Overview: ${show.overview?.substring(0, 100)}...`);
+
+      if (show.streamingOptions && show.streamingOptions['us']) {
+        console.log(`   ✓ Found ${show.streamingOptions['us'].length} streaming options in US`);
+      }
+    }
+
+    console.log('\n✅ API connection successful!');
+    console.log('All tests passed. You\'re ready to build the app!\n');
   } catch (error) {
-    console.error('✗ API test failed:', error);
+    console.error('\n❌ API test failed:');
+    console.error(error);
+    console.log('\nPlease check:');
+    console.log('1. Your RAPIDAPI_KEY is set in .env.local');
+    console.log('2. You have subscribed to the API on RapidAPI');
+    console.log('3. You have not exceeded your rate limit\n');
+    process.exit(1);
   }
 }
 
 testAPI();
 ```
 
-Run: `npx tsx scripts/test-api.ts`
+Run the test:
+```bash
+npx tsx scripts/test-api.ts
+```
+
+You should see:
+```
+✓ RAPIDAPI_KEY is set
+✓ Found 20 results
+✓ First result: Inception
+✓ Fetched details for: Inception
+✓ Found 5 streaming options in US
+✅ API connection successful!
+```
 
 ---
 

@@ -1,9 +1,6 @@
 [tools]
 node = "22"
 
-[env]
-NODE_ENV = "development"
-
 [tasks.dev]
 description = "Start development server"
 run = "npm run dev"

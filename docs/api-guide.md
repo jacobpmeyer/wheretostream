@@ -20,13 +20,22 @@ RAPIDAPI_KEY=your_rapid_api_key_here
 
 ### Base Client (`src/lib/streaming-api.ts`)
 ```typescript
-import { Client } from 'streaming-availability';
+import { Client, Configuration } from 'streaming-availability';
 
-// Initialize client with API key
-const client = new Client(process.env.RAPIDAPI_KEY!);
+if (!process.env.RAPIDAPI_KEY) {
+  throw new Error('RAPIDAPI_KEY environment variable is not set');
+}
+
+const client = new Client(
+  new Configuration({
+    apiKey: process.env.RAPIDAPI_KEY
+  })
+);
 
 export { client };
 ```
+
+**Note:** Next.js automatically loads `.env.local` files. No need for dotenv or additional configuration.
 
 ## Core API Functions
 
@@ -339,13 +348,17 @@ Example:
 
 ```typescript
 // src/lib/streaming-api.ts
-import { Client } from 'streaming-availability';
+import { Client, Configuration } from 'streaming-availability';
 
 if (!process.env.RAPIDAPI_KEY) {
   throw new Error('RAPIDAPI_KEY is not set');
 }
 
-const client = new Client(process.env.RAPIDAPI_KEY);
+const client = new Client(
+  new Configuration({
+    apiKey: process.env.RAPIDAPI_KEY
+  })
+);
 
 export interface SearchParams {
   title: string;
@@ -415,43 +428,71 @@ Create a test file to verify API connectivity:
 
 ```typescript
 // scripts/test-api.ts
-import { StreamingAPI } from '../src/lib/streaming-api';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+// Manually load .env.local (Next.js does this automatically)
+try {
+  const envFile = readFileSync(resolve(process.cwd(), '.env.local'), 'utf8');
+  envFile.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const [key, ...valueParts] = trimmed.split('=');
+      if (key && valueParts.length > 0) {
+        process.env[key.trim()] = valueParts.join('=').trim();
+      }
+    }
+  });
+} catch (error) {
+  console.error('Error loading .env.local:', error);
+}
 
 async function testAPI() {
+  // Dynamic import AFTER env is loaded
+  const { searchShows, getShowById } = await import('../src/lib/streaming-api.js');
+
   console.log('Testing Streaming Availability API...\n');
-  
+
   try {
     // Test search
     console.log('Searching for "Inception"...');
-    const results = await StreamingAPI.searchShows({
-      title: 'Inception',
-      country: 'us'
-    });
-    console.log(`Found ${results.length} results`);
-    console.log('First result:', results[0]?.title);
-    
+    const results = await searchShows('Inception', 'us');
+    console.log(`✓ Found ${results.length} results`);
+    console.log(`✓ First result: ${results[0]?.title}`);
+
     // Test get show
     if (results[0]) {
       console.log('\nFetching show details...');
-      const show = await StreamingAPI.getShowDetails({
-        id: results[0].id,
-        country: 'us'
-      });
-      console.log('Title:', show.title);
-      console.log('Streaming options:', 
-        Object.keys(show.streamingOptions).length);
+      const show = await getShowById(results[0].id, 'us');
+      console.log(`✓ Title: ${show.title}`);
+      console.log(`✓ Overview: ${show.overview?.substring(0, 100)}...`);
+
+      if (show.streamingOptions?.['us']) {
+        console.log(`✓ Found ${show.streamingOptions['us'].length} streaming options`);
+      }
     }
-    
-    console.log('\n✓ API tests passed!');
+
+    console.log('\n✅ API tests passed!');
   } catch (error) {
-    console.error('✗ API test failed:', error);
+    console.error('❌ API test failed:', error);
+    process.exit(1);
   }
 }
 
 testAPI();
 ```
 
-Run with: `npx tsx scripts/test-api.ts`
+**Install tsx for running TypeScript:**
+```bash
+npm install -D tsx
+```
+
+**Run the test:**
+```bash
+npx tsx scripts/test-api.ts
+```
+
+**Note:** The manual env loading is only needed for standalone test scripts. Next.js automatically loads `.env.local` files when running the app.
 
 ## API Response Examples
 
